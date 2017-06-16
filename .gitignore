@@ -2,3 +2,4 @@ venv-beach-nb
 .ipynb_checkpoints
 .DS_Store
 virtualenvs
+*pyc
