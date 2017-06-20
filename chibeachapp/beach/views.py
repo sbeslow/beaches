@@ -29,7 +29,6 @@ def show_beach(request, beach_name):
     ret_val = {'beach_name': beach_name, 'most_recent_sample': {'date': most_recent_sample['date'],
                'reading': most_recent_sample['dna_reading_mean']}}
 
-    results_by_date = {'dna': [], 'culture': []}
     lab_results['date'] = lab_results['date'].apply(lambda x: pd.to_datetime(x).date().strftime('%b %d, %Y'))
     lab_results['year'] = lab_results['year'].astype(str)
 
@@ -54,15 +53,14 @@ def show_beach(request, beach_name):
                                   'series': [{'name': level.replace('_', ' ').title(),
                                               'data': [sample_levels[level][year] for year in years]}
                                              for level in accept_levels]}
-
-    # Probably getting rid of this soonish
+    results_by_date = {year: {'dna': [], 'culture': []} for year in years}
     lab_results = lab_results.set_index('date').to_dict('index')
     for date in sorted(lab_results.keys()):
         lab_result = lab_results[date]
         if str(lab_result['dna_reading_mean']) != 'nan':
-            results_by_date['dna'].append([date, lab_result['dna_reading_mean']])
+            results_by_date[lab_result['year']]['dna'].append([date, lab_result['dna_reading_mean']])
         if str(lab_result['culture_reading_mean']) != 'nan':
-            results_by_date['culture'].append([date, lab_result['culture_reading_mean']])
+            results_by_date[lab_result['year']]['culture'].append([date, lab_result['culture_reading_mean']])
     ret_val['results_by_date'] = results_by_date
 
     return render(request, 'show_beach.html', ret_val)

@@ -5,7 +5,7 @@ function drawSamplesByYear(samplesByYear) {
             type: 'column'
         },
         title: {
-            text: 'Sample CFU readings'
+            text: 'Bacteria Samples by Year'
         },
         xAxis: {
             categories: samplesByYear['years']
@@ -22,8 +22,7 @@ function drawSamplesByYear(samplesByYear) {
                     color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
                 },
                 formatter: function() {
-                    var percent = Math.round((this.points[1][1] / this.total) * 100);
-                    return percent.toString() + "%" ;
+                    return this.total;
                 }
             },
         },
@@ -52,5 +51,35 @@ function drawSamplesByYear(samplesByYear) {
             }
         },
         series: samplesByYear['series'],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'bottom',
+                        layout: 'horizontal'
+                    },
+                    yAxis: {
+                        labels: {
+                            align: 'left',
+                            x: 0,
+                            y: -5
+                        },
+                        title: {
+                            text: null
+                        }
+                    },
+                    subtitle: {
+                        text: null
+                    },
+                    credits: {
+                        enabled: false
+                    }
+                }
+            }]
+        },
     });
 }
